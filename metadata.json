@@ -1,0 +1,8 @@
+{
+  "name": "SCSMCOE AI",
+  "description": "The official AI-powered Operating System for Shri Chatrapati Shivaji Maharaj College of Engineering, Nepti-Ahmednagar.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
