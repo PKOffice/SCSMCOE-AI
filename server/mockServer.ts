@@ -1,4 +1,4 @@
-import { Notice, User, UserRole, CareerOpportunity, Complaint } from '../types';
+import { Notice, User, UserRole, CareerOpportunity, Complaint, SportMatch, CanteenItem } from '../types';
 
 class MockDatabase {
   users: User[] = [
@@ -11,7 +11,7 @@ class MockDatabase {
       title: 'Mid-Sem Exam Schedule (Nepti Campus)',
       content: 'The schedule for all Engineering departments for Oct 2024 is now out.',
       department: 'Exam Cell',
-      date: '2024-09-22',
+      date: '2026-01-11',
       isUrgent: true,
       category: 'Academics'
     },
@@ -20,18 +20,9 @@ class MockDatabase {
       title: 'TATA Motors Drive - Mechanical/ENTC',
       content: 'Exclusive campus drive for Batch 2025. Pre-register on the portal.',
       department: 'Placement Cell',
-      date: '2024-09-21',
+      date: '2026-01-21',
       isUrgent: true,
       category: 'Placement'
-    },
-    {
-      id: '3',
-      title: 'Annual Sports Meet 2024',
-      content: 'Registration open for Cricket, Volleyball and Athletics.',
-      department: 'Sports Committee',
-      date: '2024-09-20',
-      isUrgent: false,
-      category: 'Events'
     }
   ];
 
@@ -45,7 +36,7 @@ class MockDatabase {
       location: 'Pune, India',
       region: 'Domestic',
       description: 'Major infrastructure projects across India.',
-      deadline: '2024-10-15'
+      deadline: '2026-01-05'
     },
     {
       id: 'j2',
@@ -56,8 +47,18 @@ class MockDatabase {
       location: 'Stuttgart, Germany',
       region: 'Foreign',
       description: 'Work on next-gen EV drivetrains.',
-      deadline: '2024-11-01'
+      deadline: '2026-01-15'
     }
+  ];
+
+  matches: SportMatch[] = [
+    { id: 'm1', sport: 'Cricket', teamA: 'SCSMCOE', teamB: 'COEP', score: '142/4 (18.2)', status: 'LIVE', venue: 'Main Ground' },
+    { id: 'm2', sport: 'Football', teamA: 'MECH-A', teamB: 'CIVIL-B', score: '2 - 0', status: 'LIVE', venue: 'South Turf' }
+  ];
+
+  canteenItems: CanteenItem[] = [
+    { id: 'c1', name: 'Pure Veg Thali', price: 60, category: 'Lunch', description: 'Complete meal', availability: true, preparationTime: '15m' },
+    { id: 'c2', name: 'Special Misal Pav', price: 50, category: 'Breakfast', description: 'Spicy maharashtrian breakfast', availability: true, preparationTime: '8m' }
   ];
   
   complaints: Complaint[] = [];
@@ -80,5 +81,11 @@ export const server = {
   },
   jobs: {
     getJobs: async () => db.jobs
+  },
+  sports: {
+    getMatches: async () => db.matches
+  },
+  canteen: {
+    getItems: async () => db.canteenItems
   }
 };

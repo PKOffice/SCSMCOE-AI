@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { firestore, notifications } from '../services/firebaseService';
+import { geminiService } from '../services/geminiService';
 import { UserRole, Notice } from '../types';
-import { ShieldCheck, Plus, Send, AlertCircle, BarChart3 } from 'lucide-react';
+import { ShieldCheck, Plus, Send, AlertCircle, BarChart3, Sparkles, CheckCircle2 } from 'lucide-react';
 
 export const Admin: React.FC = () => {
   const [title, setTitle] = useState('');
@@ -9,6 +10,21 @@ export const Admin: React.FC = () => {
   const [category, setCategory] = useState<any>('Academics');
   const [isUrgent, setIsUrgent] = useState(false);
   const [status, setStatus] = useState('');
+  const [aiReview, setAiReview] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleGenerateSummary = async () => {
+    if (!content) return;
+    setIsGenerating(true);
+    try {
+      const summary = await geminiService.summarizeNotice(content);
+      setAiReview(summary);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const handleBroadcast = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,6 +46,7 @@ export const Admin: React.FC = () => {
     setStatus('Notice Broadcasted Successfully!');
     setTitle('');
     setContent('');
+    setAiReview('');
     setTimeout(() => setStatus(''), 3000);
   };
 
@@ -69,7 +86,7 @@ export const Admin: React.FC = () => {
                 <div>
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Category</label>
                   <select 
-                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold uppercase text-[10px] tracking-widest"
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
                   >
@@ -92,7 +109,17 @@ export const Admin: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Message Content</label>
+                <div className="flex justify-between items-center mb-2">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Message Content</label>
+                  <button 
+                    type="button" 
+                    onClick={handleGenerateSummary}
+                    disabled={!content || isGenerating}
+                    className="flex items-center gap-2 text-[9px] font-black text-indigo-600 uppercase tracking-widest hover:text-indigo-500 disabled:opacity-30"
+                  >
+                    <Sparkles size={12} className={isGenerating ? 'animate-spin' : ''} /> AI Preview Summary
+                  </button>
+                </div>
                 <textarea 
                   className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-8 focus:outline-none focus:ring-2 focus:ring-indigo-500 h-40"
                   value={content}
@@ -102,7 +129,25 @@ export const Admin: React.FC = () => {
                 />
               </div>
 
-              {status && <div className="p-4 bg-emerald-50 text-emerald-600 rounded-xl text-center text-[10px] font-black uppercase tracking-widest">{status}</div>}
+              {aiReview && (
+                <div className="p-6 bg-indigo-50 rounded-2xl border border-indigo-100">
+                  <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                    <Sparkles size={12} /> AI Generated TL;DR (Review Required)
+                  </p>
+                  <input 
+                    className="w-full bg-white border border-indigo-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-700"
+                    value={aiReview}
+                    onChange={(e) => setAiReview(e.target.value)}
+                  />
+                  <p className="mt-2 text-[8px] font-bold text-indigo-400 uppercase">This summary will appear on student feeds.</p>
+                </div>
+              )}
+
+              {status && (
+                <div className="p-4 bg-emerald-50 text-emerald-600 rounded-xl text-center text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2">
+                  <CheckCircle2 size={16} /> {status}
+                </div>
+              )}
 
               <button className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-5 rounded-2xl shadow-xl shadow-indigo-200 transition-all uppercase tracking-[0.2em] flex items-center justify-center gap-4">
                 Deploy Broadcast <Send size={20} />

@@ -11,6 +11,8 @@ export interface User {
   email: string;
   role: UserRole;
   department?: string;
+  graduationYear?: number;
+  languagePreference?: 'English' | 'Marathi' | 'Hindi';
 }
 
 export interface Notice {
@@ -35,6 +37,15 @@ export interface CareerOpportunity {
   deadline: string;
 }
 
+export interface AlumniMentor {
+  id: string;
+  name: string;
+  company: string;
+  location: string;
+  batch: number;
+  sector: string;
+}
+
 export interface Complaint {
   id: string;
   userId: string;
@@ -44,4 +55,24 @@ export interface Complaint {
   status: 'Pending' | 'In Progress' | 'Resolved';
   priority: 'Low' | 'Medium' | 'High';
   timestamp: string;
+}
+
+export interface SportMatch {
+  id: string;
+  sport: string;
+  teamA: string;
+  teamB: string;
+  score: string;
+  status: 'LIVE' | 'UPCOMING' | 'FINISHED';
+  venue: string;
+}
+
+export interface CanteenItem {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  description: string;
+  availability: boolean;
+  preparationTime: string;
 }

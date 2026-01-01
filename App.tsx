@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { Dashboard } from './pages/Dashboard';
 import { Notices } from './pages/Notices';
@@ -11,7 +11,16 @@ import { Events } from './pages/Events';
 import { Canteen } from './pages/Canteen';
 import { Support } from './pages/Support';
 import { Sports } from './pages/Sports';
+import { Community } from './pages/Community';
 import { firebaseAuth } from './services/firebaseService';
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const user = firebaseAuth.getCurrentUser();
@@ -22,6 +31,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 const App: React.FC = () => {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route path="/auth" element={<Auth />} />
         <Route path="/" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
@@ -32,6 +42,7 @@ const App: React.FC = () => {
         <Route path="/events" element={<ProtectedRoute><Layout><Events /></Layout></ProtectedRoute>} />
         <Route path="/sports" element={<ProtectedRoute><Layout><Sports /></Layout></ProtectedRoute>} />
         <Route path="/support" element={<ProtectedRoute><Layout><Support /></Layout></ProtectedRoute>} />
+        <Route path="/community" element={<ProtectedRoute><Layout><Community /></Layout></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute><Layout><Admin /></Layout></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
